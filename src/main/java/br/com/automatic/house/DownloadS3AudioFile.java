@@ -11,15 +11,16 @@ import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.auth.profile.ProfileCredentialsProvider;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
+import com.amazonaws.services.s3.model.DeleteObjectRequest;
 import com.amazonaws.services.s3.model.GetObjectRequest;
 import com.amazonaws.util.IOUtils;
 import com.google.cloud.speech.v1.RecognitionAudio;
 import com.google.cloud.speech.v1.RecognitionConfig;
+import com.google.cloud.speech.v1.RecognitionConfig.AudioEncoding;
 import com.google.cloud.speech.v1.RecognizeResponse;
 import com.google.cloud.speech.v1.SpeechClient;
 import com.google.cloud.speech.v1.SpeechRecognitionAlternative;
 import com.google.cloud.speech.v1.SpeechRecognitionResult;
-import com.google.cloud.speech.v1.RecognitionConfig.AudioEncoding;
 import com.google.protobuf.ByteString;
 
 public class DownloadS3AudioFile {
@@ -38,12 +39,11 @@ public class DownloadS3AudioFile {
         AmazonS3 s3 = new AmazonS3Client(credentials);
 		com.amazonaws.services.s3.model.S3Object object = s3.getObject(new GetObjectRequest(Constants.BUCKET_NAME, "recording.3gp"));
 		try {
-			IOUtils.copy(object.getObjectContent(), new FileOutputStream("/home/fellipe/Projetos/recording.3gp"));
-			//transformToText("/home/fellipe/Projetos/recording.3gp");
+			IOUtils.copy(object.getObjectContent(), new FileOutputStream("/home/fellipe/Projetos/recording.3gp"));			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-	}	
+	}
 	
 	public static void transformToText(String caminho){
 		try{
@@ -86,6 +86,20 @@ public class DownloadS3AudioFile {
 		      }
 		    }
 		    speech.close();
+		    
+		    AWSCredentials credentials = null;
+	        try {
+	            credentials = new ProfileCredentialsProvider("fellipe.oliveira").getCredentials();
+	        } catch (Exception e) {
+	            throw new AmazonClientException(
+	                    "Cannot load the credentials from the credential profiles file. " +
+	                    "Please make sure that your credentials file is at the correct " +
+	                    "location (/home/fellipe/.aws/credentials), and is in valid format.",
+	                    e);
+	        }
+		    AmazonS3 s3 = new AmazonS3Client(credentials);
+			com.amazonaws.services.s3.model.S3Object object = s3.getObject(new GetObjectRequest(Constants.BUCKET_NAME, "recording.3gp"));
+		    //s3.deleteObject(new DeleteObjectRequest(Constants.BUCKET_NAME, "recording.3gp"));
 		}
 		catch (Exception e) {
 			e.printStackTrace();
@@ -93,7 +107,11 @@ public class DownloadS3AudioFile {
 	}
 	
 	public static void main(String[] args) {
-		//download();
+		long tempoInicio = System.currentTimeMillis();
+		download();		
+		ConvertAudioFile convert = new ConvertAudioFile();
+		convert.convertToWav("/home/fellipe/Projetos/recording.3gp");
 		transformToText("/home/fellipe/Projetos/recording.wav");
+		System.out.println("Tempo Total: " + (System.currentTimeMillis()-tempoInicio) /1000);
 	}
 }

@@ -9,17 +9,36 @@
 			<artifactId>aws-java-sdk</artifactId>
 			<version>1.11.177</version>
 			<scope>compile</scope>
+			<exclusions>
+				<exclusion>  <!-- declare the exclusion here -->
+					<groupId>org.apache.httpcomponents</groupId>
+					<artifactId>httpmime</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>com.amazonaws</groupId>
 			<artifactId>amazon-kinesis-client</artifactId>
 			<version>1.2.1</version>
 			<scope>compile</scope>
+			<exclusions>
+				<exclusion>  <!-- declare the exclusion here -->
+					<groupId>org.apache.httpcomponents</groupId>
+					<artifactId>httpmime</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>com.google.cloud</groupId>
 			<artifactId>google-cloud-speech</artifactId>
 			<version>0.21.1-alpha</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.apache.httpcomponents/httpclient -->
+
+		<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpmime</artifactId>
+			<version>4.5.2</version>
 		</dependency>
 	</dependencies>
 </project>
