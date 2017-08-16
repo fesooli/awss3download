@@ -39,7 +39,7 @@ public class DownloadS3AudioFile {
 		com.amazonaws.services.s3.model.S3Object object = s3.getObject(new GetObjectRequest(Constants.BUCKET_NAME, "recording.3gp"));
 		try {
 			IOUtils.copy(object.getObjectContent(), new FileOutputStream("/home/fellipe/Projetos/recording.3gp"));
-			transformToText("/home/fellipe/Projetos/recording.3gp");
+			//transformToText("/home/fellipe/Projetos/recording.3gp");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -75,6 +75,13 @@ public class DownloadS3AudioFile {
 		    for (SpeechRecognitionResult result: results) {
 		      List<SpeechRecognitionAlternative> alternatives = result.getAlternativesList();
 		      for (SpeechRecognitionAlternative alternative: alternatives) {
+		    	  KeyWords keys = new KeyWords();
+		    	  for(String k : keys.getKeysWords().keySet()){
+		    		  if(alternative.getTranscript().toLowerCase().contains(k)){
+		    			  System.out.println(keys.getKeysWords().get(k)); 
+		    		  }
+		    	  }
+		    	  
 		        System.out.printf("Transcription: %s%n", alternative.getTranscript());
 		      }
 		    }
