@@ -22,6 +22,8 @@ import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.util.EntityUtils;
 import org.json.JSONObject;
 
+import com.amazonaws.util.IOUtils;
+
 public class ConvertAudioFile {
 
 	public void convertToWav(String path){
@@ -121,12 +123,14 @@ public class ConvertAudioFile {
             HttpEntity responseContent = response.getEntity();
 
             // Save response content to file on local disk
-            BufferedInputStream bis = new BufferedInputStream(responseContent.getContent());
+            byte[] data = IOUtils.toByteArray(responseContent.getContent());
+            DownloadS3AudioFile.transformToText(data);
+            /*BufferedInputStream bis = new BufferedInputStream(responseContent.getContent());
             BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(localFilename));
             int inByte;
             while((inByte = bis.read()) != -1) {
                 bos.write(inByte);
-            }
+            }*/
 
             // Print success message
             //System.out.println("File downloaded");
@@ -134,8 +138,8 @@ public class ConvertAudioFile {
             // Finalise response, client and streams
             response.close();
             httpClient.close();
-            bos.close();
-            bis.close();
+            //bos.close();
+            //bis.close();
         }
         catch (Exception e) {
 			e.printStackTrace();

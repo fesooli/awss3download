@@ -49,17 +49,10 @@ public class DownloadS3AudioFile {
 		download();
 	}*/
 	
-	public static void transformToText(String caminho){
+	public static void transformToText(byte[] data){
 		try{
 			// Instantiates a client
 		    SpeechClient speech = SpeechClient.create();
-
-		    // The path to the audio file to transcribe
-		    String fileName = caminho;
-
-		    // Reads the audio file into memory
-		    Path path = Paths.get(fileName);
-		    byte[] data = Files.readAllBytes(path);
 		    ByteString audioBytes = ByteString.copyFrom(data);
 
 		    // Builds the sync recognize request
@@ -86,7 +79,7 @@ public class DownloadS3AudioFile {
 		    		  }
 		    	  }
 		    	  
-		        //System.out.printf("Transcription: %s%n", alternative.getTranscript());
+		        System.out.printf("Transcription: %s%n", alternative.getTranscript());
 		      }
 		    }
 		    speech.close();
@@ -115,7 +108,7 @@ public class DownloadS3AudioFile {
 		//download();		
 		ConvertAudioFile convert = new ConvertAudioFile();
 		convert.convertToWav("/home/fellipe/Projetos/recording.3gp");
-		transformToText("/home/fellipe/Projetos/recording.wav");
+		//transformToText("/home/fellipe/Projetos/recording.wav");
 		System.out.println("Tempo Total: " + (System.currentTimeMillis()-tempoInicio) /1000);
 	}
 }
