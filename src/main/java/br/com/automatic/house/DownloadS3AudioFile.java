@@ -11,7 +11,6 @@ import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.auth.profile.ProfileCredentialsProvider;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
-import com.amazonaws.services.s3.model.DeleteObjectRequest;
 import com.amazonaws.services.s3.model.GetObjectRequest;
 import com.amazonaws.util.IOUtils;
 import com.google.cloud.speech.v1.RecognitionAudio;
@@ -25,7 +24,7 @@ import com.google.protobuf.ByteString;
 
 public class DownloadS3AudioFile {
 
-	public static void download(){
+	/*public static void download(){
 		AWSCredentials credentials = null;
         try {
             credentials = new ProfileCredentialsProvider("fellipe.oliveira").getCredentials();
@@ -37,13 +36,18 @@ public class DownloadS3AudioFile {
                     e);
         }
         AmazonS3 s3 = new AmazonS3Client(credentials);
-		com.amazonaws.services.s3.model.S3Object object = s3.getObject(new GetObjectRequest(Constants.BUCKET_NAME, "recording.3gp"));
 		try {
+			com.amazonaws.services.s3.model.S3Object object = s3.getObject(new GetObjectRequest(Constants.BUCKET_NAME, "recording.3gp"));
 			IOUtils.copy(object.getObjectContent(), new FileOutputStream("/home/fellipe/Projetos/recording.3gp"));			
 		} catch (Exception e) {
-			e.printStackTrace();
+			//e.printStackTrace();
+			verifyS3File();
 		}
 	}
+	
+	public static void verifyS3File(){
+		download();
+	}*/
 	
 	public static void transformToText(String caminho){
 		try{
@@ -78,11 +82,11 @@ public class DownloadS3AudioFile {
 		    	  KeyWords keys = new KeyWords();
 		    	  for(String k : keys.getKeysWords().keySet()){
 		    		  if(alternative.getTranscript().toLowerCase().contains(k)){
-		    			  System.out.println(keys.getKeysWords().get(k)); 
+		    			  //System.out.println(keys.getKeysWords().get(k)); 
 		    		  }
 		    	  }
 		    	  
-		        System.out.printf("Transcription: %s%n", alternative.getTranscript());
+		        //System.out.printf("Transcription: %s%n", alternative.getTranscript());
 		      }
 		    }
 		    speech.close();
@@ -108,7 +112,7 @@ public class DownloadS3AudioFile {
 	
 	public static void main(String[] args) {
 		long tempoInicio = System.currentTimeMillis();
-		download();		
+		//download();		
 		ConvertAudioFile convert = new ConvertAudioFile();
 		convert.convertToWav("/home/fellipe/Projetos/recording.3gp");
 		transformToText("/home/fellipe/Projetos/recording.wav");

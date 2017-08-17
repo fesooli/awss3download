@@ -27,14 +27,14 @@ public class ConvertAudioFile {
 	public void convertToWav(String path){
 		String apiKey = "ac68ae6007cd3167ee8605ce863ff83d139029ec";
         String endpoint = "https://sandbox.zamzar.com/v1/jobs";
-        String sourceFile = path;
-        System.out.println(sourceFile);
+        String sourceFile = "s3://fellipe.oliveira@audio-teste/recording.3gp";//path;
+        //System.out.println(sourceFile);
         String targetFormat = "wav";
 
         // Create HTTP client and request object
         CloseableHttpClient httpClient = getHttpClient(apiKey);
         HttpEntity requestContent = MultipartEntityBuilder.create()
-            .addPart("source_file", new FileBody(new File(sourceFile)))
+            .addPart("source_file",  new StringBody(sourceFile, ContentType.TEXT_PLAIN))
             .addPart("target_format", new StringBody(targetFormat, ContentType.TEXT_PLAIN))
             .build();
         HttpPost request = new HttpPost(endpoint);
@@ -52,12 +52,12 @@ public class ConvertAudioFile {
 	        JSONObject json = new JSONObject(result);
 	
 	        // Print result
-	        System.out.println(json);
+	       // System.out.println(json);
 	
 	        // Finalise response and client
 	        response.close();
 	        httpClient.close();
-	        System.out.println(json.getInt("id"));
+	        //System.out.println(json.getInt("id"));
 	        JSONObject verifyJson = null;
 	        
 	        do{
@@ -91,7 +91,7 @@ public class ConvertAudioFile {
 	        JSONObject json = new JSONObject(result);
 
 	        // Print result
-	        System.out.println(json);
+	        //System.out.println(json);
 
 	        // Finalise response and client
 	        response.close();
@@ -129,7 +129,7 @@ public class ConvertAudioFile {
             }
 
             // Print success message
-            System.out.println("File downloaded");
+            //System.out.println("File downloaded");
 
             // Finalise response, client and streams
             response.close();
