@@ -124,7 +124,7 @@ public class ConvertAudioFile {
 
             // Save response content to file on local disk
             byte[] data = IOUtils.toByteArray(responseContent.getContent());
-            DownloadS3AudioFile.transformToText(data);
+            //DownloadS3AudioFile.transformToText(data);
             /*BufferedInputStream bis = new BufferedInputStream(responseContent.getContent());
             BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(localFilename));
             int inByte;

@@ -24,7 +24,7 @@ import com.google.protobuf.ByteString;
 
 public class DownloadS3AudioFile {
 
-	/*public static void download(){
+	public static void download(){
 		AWSCredentials credentials = null;
         try {
             credentials = new ProfileCredentialsProvider("fellipe.oliveira").getCredentials();
@@ -37,8 +37,10 @@ public class DownloadS3AudioFile {
         }
         AmazonS3 s3 = new AmazonS3Client(credentials);
 		try {
-			com.amazonaws.services.s3.model.S3Object object = s3.getObject(new GetObjectRequest(Constants.BUCKET_NAME, "recording.3gp"));
-			IOUtils.copy(object.getObjectContent(), new FileOutputStream("/home/fellipe/Projetos/recording.3gp"));			
+			com.amazonaws.services.s3.model.S3Object object = s3.getObject(new GetObjectRequest(Constants.BUCKET_NAME, "fala.txt"));
+			String fala = IOUtils.toString(object.getObjectContent());
+			System.out.println(fala);
+			//transformToText(data);
 		} catch (Exception e) {
 			//e.printStackTrace();
 			verifyS3File();
@@ -47,9 +49,9 @@ public class DownloadS3AudioFile {
 	
 	public static void verifyS3File(){
 		download();
-	}*/
+	}
 	
-	public static void transformToText(byte[] data){
+	/*public static void transformToText(byte[] data){
 		try{
 			// Instantiates a client
 		    SpeechClient speech = SpeechClient.create();
@@ -58,7 +60,7 @@ public class DownloadS3AudioFile {
 		    // Builds the sync recognize request
 		    RecognitionConfig config = RecognitionConfig.newBuilder()
 		        .setEncoding(AudioEncoding.LINEAR16)
-		        .setSampleRateHertz(8000)
+		        .setSampleRateHertz(48000)
 		        .setLanguageCode("pt-BR")
 		        .build();
 		    RecognitionAudio audio = RecognitionAudio.newBuilder()
@@ -95,19 +97,19 @@ public class DownloadS3AudioFile {
 	                    e);
 	        }
 		    AmazonS3 s3 = new AmazonS3Client(credentials);
-			com.amazonaws.services.s3.model.S3Object object = s3.getObject(new GetObjectRequest(Constants.BUCKET_NAME, "recording.3gp"));
+			com.amazonaws.services.s3.model.S3Object object = s3.getObject(new GetObjectRequest(Constants.BUCKET_NAME, "recording.wav"));
 		    //s3.deleteObject(new DeleteObjectRequest(Constants.BUCKET_NAME, "recording.3gp"));
 		}
 		catch (Exception e) {
 			e.printStackTrace();
 		}		
-	}
+	}*/
 	
 	public static void main(String[] args) {
 		long tempoInicio = System.currentTimeMillis();
-		//download();		
-		ConvertAudioFile convert = new ConvertAudioFile();
-		convert.convertToWav("/home/fellipe/Projetos/recording.3gp");
+		download();		
+		//ConvertAudioFile convert = new ConvertAudioFile();
+		//convert.convertToWav("/home/fellipe/Projetos/recording.3gp");
 		//transformToText("/home/fellipe/Projetos/recording.wav");
 		System.out.println("Tempo Total: " + (System.currentTimeMillis()-tempoInicio) /1000);
 	}
