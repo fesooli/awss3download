@@ -1,10 +1,6 @@
 package br.com.automatic.house;
 
-import java.io.FileOutputStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.List;
+import java.io.IOException;
 
 import com.amazonaws.AmazonClientException;
 import com.amazonaws.auth.AWSCredentials;
@@ -13,18 +9,10 @@ import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.GetObjectRequest;
 import com.amazonaws.util.IOUtils;
-import com.google.cloud.speech.v1.RecognitionAudio;
-import com.google.cloud.speech.v1.RecognitionConfig;
-import com.google.cloud.speech.v1.RecognitionConfig.AudioEncoding;
-import com.google.cloud.speech.v1.RecognizeResponse;
-import com.google.cloud.speech.v1.SpeechClient;
-import com.google.cloud.speech.v1.SpeechRecognitionAlternative;
-import com.google.cloud.speech.v1.SpeechRecognitionResult;
-import com.google.protobuf.ByteString;
 
 public class DownloadS3AudioFile {
 
-	public static void download(){
+	public static String download(){
 		AWSCredentials credentials = null;
         try {
             credentials = new ProfileCredentialsProvider("fellipe.oliveira").getCredentials();
@@ -39,12 +27,13 @@ public class DownloadS3AudioFile {
 		try {
 			com.amazonaws.services.s3.model.S3Object object = s3.getObject(new GetObjectRequest(Constants.BUCKET_NAME, "fala.txt"));
 			String fala = IOUtils.toString(object.getObjectContent());
-			System.out.println(fala);
+			return fala;
 			//transformToText(data);
 		} catch (Exception e) {
 			//e.printStackTrace();
 			verifyS3File();
 		}
+		return null;
 	}
 	
 	public static void verifyS3File(){
@@ -105,12 +94,32 @@ public class DownloadS3AudioFile {
 		}		
 	}*/
 	
+	public static void textValidation(String text){
+		if(text != null){
+			text = text.toLowerCase();
+			if(text.contains("ligar") || text.contains("desligar")){
+				executeCommand("irsend device SEND_ONCE KEY_POWER");
+			}
+		}
+	}
+	
+	public static void executeCommand(String command){
+		Runtime run = Runtime.getRuntime();
+		try {
+			Process process = run.exec(command); //comando a ser executado
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
 	public static void main(String[] args) {
 		long tempoInicio = System.currentTimeMillis();
-		download();		
+		String fala = download();
+		textValidation(fala);
 		//ConvertAudioFile convert = new ConvertAudioFile();
 		//convert.convertToWav("/home/fellipe/Projetos/recording.3gp");
 		//transformToText("/home/fellipe/Projetos/recording.wav");
+		
 		System.out.println("Tempo Total: " + (System.currentTimeMillis()-tempoInicio) /1000);
 	}
 }
